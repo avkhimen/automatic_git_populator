@@ -3,4 +3,4 @@ Script that will take a repository and using a language model will create commit
 
 ## Running the script
 
-Run with `python main.py --dir_name <dir_name> --freq <freq>`.
+Run with `python main.py --dir_name <dir_name> --freq <freq> --num_days <num_days>`.
