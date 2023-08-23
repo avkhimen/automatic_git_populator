@@ -2,9 +2,18 @@ import numpy as np
 import pandas as pd
 import argparse
 import redis
+import os
+from datetime import datetime
 
 from utils.formats import DATA_FORMATS
 from utils.storage_utils import make_redis_client
+
+def create_project_name(path):
+    project_base = os.path.basename(os.path.normpath(path))
+    current_date = datetime.now()
+    current_date_string = current_date.strftime('%Y%m%d')
+    project_name = project_base + '_' + current_date_string
+    return project_name
 
 def main():
     parser = argparse.ArgumentParser(description="Input variables")
@@ -27,7 +36,7 @@ def main():
     value = 'Hello, Redis!'
 
     # Store data in Redis
-    redis_client.set(key, value)
+    redis_client.mset({key: value, 'a':'b'})
 
     # Retrieve and print the stored data
     stored_value = redis_client.get(key)
