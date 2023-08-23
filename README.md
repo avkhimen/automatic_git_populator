@@ -1,5 +1,5 @@
 # automatic_git_populator
-Script that will take a repository and using a language model will create commits that will be regularly posted to github.
+Script that will take a repository and using a language model will create commits that will be regularly posted to github. The script works by specifying the directory name, the frequency of commits, and the number of days over which the commits will take place.
 
 ## Installing dependencies
 
