@@ -24,10 +24,16 @@ def main():
     args = parser.parse_args()
 
     dir_name = args.dir_name
+    absolute_path = os.path.abspath(dir_name)
+
     freq = args.freq
     num_days = args.num_days
 
     print(dir_name, freq, num_days)
+
+    project_name = create_project_name(absolute_path)
+
+    print(project_name)
 
     redis_client = make_redis_client()
 
