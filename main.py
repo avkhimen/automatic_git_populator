@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
 import argparse
+import redis
+
+from utils.formats import DATA_FORMATS
+from utils.storage_utils import make_redis_client
 
 def main():
     parser = argparse.ArgumentParser(description="Input variables")
@@ -15,6 +19,19 @@ def main():
     num_days = args.num_days
 
     print(dir_name, freq, num_days)
+
+    redis_client = make_redis_client()
+
+    # Data to store
+    key = 'my_key'
+    value = 'Hello, Redis!'
+
+    # Store data in Redis
+    redis_client.set(key, value)
+
+    # Retrieve and print the stored data
+    stored_value = redis_client.get(key)
+    print(f"Key: {key}\nStored Value: {stored_value.decode('utf-8')}")
 
 if __name__ == '__main__':
     main()
