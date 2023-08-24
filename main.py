@@ -26,6 +26,8 @@ def main():
     dir_name = args.dir_name
     absolute_path = os.path.abspath(dir_name)
 
+    print('absolute path', absolute_path)
+
     freq = args.freq
     num_days = args.num_days
 
@@ -38,20 +40,28 @@ def main():
     redis_client = make_redis_client()
 
     # List to store file names
-    file_names = []
+    # Function to list non-hidden files in a directory
+    def list_non_hidden_files(directory):
+        non_hidden_files = []
+        non_hidden_files_dir = []
+        for root, dirs, files in os.walk(directory):
+            # Filter out hidden subdirectories
+            dirs[:] = [d for d in dirs if not d.startswith('.') and d[0].isalpha()]
+            for file in files:
+                if not file.startswith('.'):  # Check if file is not hidden
+                    non_hidden_files.append(os.path.join(absolute_path, os.path.join(root, file)[2:]))
+        return non_hidden_files
 
-    # Walk through the directory and its subdirectories
-    for root, dirs, files in os.walk(absolute_path):
-        for file in files:
-            file_names.append(file)
+    # Get a list of non-hidden files
+    non_hidden_files = list_non_hidden_files(dir_name)
 
-    # Print the list of file names
-    for file_name in file_names:
-        print(file_name)
+    # Print the list of non-hidden files
+    for file_path in non_hidden_files:
+        print(file_path)
 
     # Data to store
     key = project_name
-    value = file_names
+    value = 'file_names'
 
     # Store data in Redis
     redis_client.mset({key: value})
