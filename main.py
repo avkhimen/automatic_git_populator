@@ -43,17 +43,20 @@ def main():
     # Function to list non-hidden files in a directory
     def list_non_hidden_files(directory):
         non_hidden_files = []
-        non_hidden_files_dir = []
+        non_hidden_files_code_line_nums = []
         for root, dirs, files in os.walk(directory):
             # Filter out hidden subdirectories
             dirs[:] = [d for d in dirs if not d.startswith('.') and d[0].isalpha()]
             for file in files:
                 if not file.startswith('.'):  # Check if file is not hidden
                     non_hidden_files.append(os.path.join(absolute_path, os.path.join(root, file)[2:]))
-        return non_hidden_files
+                    with open(os.path.join(absolute_path, os.path.join(root, file)[2:]), 'r') as f:
+                        line_count = sum(1 for line in f)
+                    non_hidden_files_code_line_nums.append(line_count)
+        return non_hidden_files, non_hidden_files_code_line_nums
 
     # Get a list of non-hidden files
-    non_hidden_files = list_non_hidden_files(dir_name)
+    non_hidden_files, non_hidden_files_code_line_nums = list_non_hidden_files(dir_name)
 
     # Print the list of non-hidden files
     for file_path in non_hidden_files:
@@ -69,6 +72,8 @@ def main():
     # Retrieve and print the stored data
     stored_value = redis_client.get(key)
     print(f"Key: {key}\nStored Value: {stored_value.decode('utf-8')}")
+
+    print(non_hidden_files_code_line_nums)
 
 if __name__ == '__main__':
     main()
