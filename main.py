@@ -37,12 +37,24 @@ def main():
 
     redis_client = make_redis_client()
 
+    # List to store file names
+    file_names = []
+
+    # Walk through the directory and its subdirectories
+    for root, dirs, files in os.walk(absolute_path):
+        for file in files:
+            file_names.append(file)
+
+    # Print the list of file names
+    for file_name in file_names:
+        print(file_name)
+
     # Data to store
-    key = 'my_key'
-    value = 'Hello, Redis!'
+    key = project_name
+    value = file_names
 
     # Store data in Redis
-    redis_client.mset({key: value, 'a':'b'})
+    redis_client.mset({key: value})
 
     # Retrieve and print the stored data
     stored_value = redis_client.get(key)
