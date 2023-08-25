@@ -1,4 +1,4 @@
-DATA_FORMATS = [
+EXCLUDED_DATA_FORMATS = [
     '.csv',
     '.xlsx',
     '.xls',

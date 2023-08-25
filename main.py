@@ -5,7 +5,7 @@ import redis
 import os
 from datetime import datetime
 
-from utils.formats import DATA_FORMATS
+from utils.formats import EXCLUDED_DATA_FORMATS
 from utils.storage_utils import make_redis_client
 import subprocess
 import logging
@@ -13,7 +13,7 @@ import logging
 # Configure the logger
 logging.basicConfig(level=logging.DEBUG, 
                     format='%(asctime)s [%(levelname)s] - %(message)s',
-                    filename='//log_files/logs.log')
+                    filename='/Users/vadimavkhimenia/Documents/projects/automatic_git_populator/log_files/logs.log')
 '''
 # Using the logger
 logging.debug("This is a debug message")
@@ -29,7 +29,9 @@ Workflow:
 1. read input args
 2. get project name
 3. init redis client
-4. 
+4. check if project is present in redis, exit if it does
+5. setup loop to make commits
+    5.1. 
 '''
 
 def git_actions(file_name, commit_message):
@@ -63,7 +65,7 @@ def list_non_hidden_files(directory, absolute_path):
         # Filter out hidden subdirectories
         dirs[:] = [d for d in dirs if not d.startswith('.') and d[0].isalpha()]
         for file in files:
-            if not file.startswith('.'):  # Check if file is not hidden
+            if (not file.startswith('.')) and (file.split('.')[-1] not in EXCLUDED_DATA_FORMATS):  # Check if file is not hidden
                 non_hidden_files.append(os.path.join(absolute_path, os.path.join(root, file)[2:]))
                 with open(os.path.join(absolute_path, os.path.join(root, file)[2:]), 'r') as f:
                     line_count = sum(1 for line in f)
@@ -98,8 +100,18 @@ def main():
 
     redis_client = make_redis_client()
 
+    project_to_check = project_name[:-8]
+    if redis_client.exists(project_to_check):
+        print(f"The key '{project_to_check}' exists in the Redis database.")
+        return
+    else:
+        print(f"The key '{project_to_check}' does not exist in the Redis database.")
+
     # Get a list of non-hidden files
     non_hidden_files, non_hidden_files_code_line_nums = list_non_hidden_files(dir_name, absolute_path)
+
+    total_num_of_lines_of_code = np.array(non_hidden_files_code_line_nums).sum()
+    print('Total number of lines of code', total_num_of_lines_of_code)
 
     # Print the list of non-hidden files
     for file_path in non_hidden_files:

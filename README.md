@@ -18,4 +18,4 @@ Tested with Python 3.11.0.
 ## Running the script
 
 1. Run redis server in a separate terminal with `$ redis-server`
-2. Run the script `$ python main.py --dir_name <dir_name> --freq <freq> --num_days <num_days>`.
+2. Run the script `$ python main.py --dir_name <dir_name> --freq <freq> --num_days <num_days> --start_date <YYYYMMDD>`.
