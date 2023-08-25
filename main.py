@@ -9,6 +9,15 @@ from utils.formats import DATA_FORMATS
 from utils.storage_utils import make_redis_client
 import subprocess
 
+'''
+Workflow:
+
+1. read input args
+2. get project name
+3. init redis client
+4. 
+'''
+
 def git_actions(file_name, commit_message):
     try:
         # Git add
