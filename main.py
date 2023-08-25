@@ -7,6 +7,22 @@ from datetime import datetime
 
 from utils.formats import DATA_FORMATS
 from utils.storage_utils import make_redis_client
+import subprocess
+
+def git_actions(file_name, commit_message):
+    try:
+        # Git add
+        subprocess.check_call(['git', 'add', file_name])
+        
+        # Git commit
+        subprocess.check_call(['git', 'commit', '-m', commit_message])
+        
+        # Git push
+        subprocess.check_call(['git', 'push', 'origin', 'main'])
+        
+        print("Git actions completed successfully!")
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing git command: {e}")
 
 def create_project_name(path):
     project_base = os.path.basename(os.path.normpath(path))
@@ -14,6 +30,22 @@ def create_project_name(path):
     current_date_string = current_date.strftime('%Y%m%d')
     project_name = project_base + '_' + current_date_string
     return project_name
+
+# List to store file names
+# Function to list non-hidden files in a directory
+def list_non_hidden_files(directory, absolute_path):
+    non_hidden_files = []
+    non_hidden_files_code_line_nums = []
+    for root, dirs, files in os.walk(directory):
+        # Filter out hidden subdirectories
+        dirs[:] = [d for d in dirs if not d.startswith('.') and d[0].isalpha()]
+        for file in files:
+            if not file.startswith('.'):  # Check if file is not hidden
+                non_hidden_files.append(os.path.join(absolute_path, os.path.join(root, file)[2:]))
+                with open(os.path.join(absolute_path, os.path.join(root, file)[2:]), 'r') as f:
+                    line_count = sum(1 for line in f)
+                non_hidden_files_code_line_nums.append(line_count)
+    return non_hidden_files, non_hidden_files_code_line_nums
 
 def main():
     parser = argparse.ArgumentParser(description="Input variables")
@@ -26,6 +58,8 @@ def main():
 
     dir_name = args.dir_name
     absolute_path = os.path.abspath(dir_name)
+
+    start_date = args.start_date
     start_date = datetime.strptime(start_date, '%Y%m%d')
 
     print('absolute path', absolute_path)
@@ -41,28 +75,19 @@ def main():
 
     redis_client = make_redis_client()
 
-    # List to store file names
-    # Function to list non-hidden files in a directory
-    def list_non_hidden_files(directory):
-        non_hidden_files = []
-        non_hidden_files_code_line_nums = []
-        for root, dirs, files in os.walk(directory):
-            # Filter out hidden subdirectories
-            dirs[:] = [d for d in dirs if not d.startswith('.') and d[0].isalpha()]
-            for file in files:
-                if not file.startswith('.'):  # Check if file is not hidden
-                    non_hidden_files.append(os.path.join(absolute_path, os.path.join(root, file)[2:]))
-                    with open(os.path.join(absolute_path, os.path.join(root, file)[2:]), 'r') as f:
-                        line_count = sum(1 for line in f)
-                    non_hidden_files_code_line_nums.append(line_count)
-        return non_hidden_files, non_hidden_files_code_line_nums
-
     # Get a list of non-hidden files
-    non_hidden_files, non_hidden_files_code_line_nums = list_non_hidden_files(dir_name)
+    non_hidden_files, non_hidden_files_code_line_nums = list_non_hidden_files(dir_name, absolute_path)
 
     # Print the list of non-hidden files
     for file_path in non_hidden_files:
         print(file_path)
+        x = 2
+        y = 3
+
+        with open(file_path, 'r') as f:
+            for current_line_number, line in enumerate(f, 1):  # Start counting from 1
+                if x <= current_line_number <= y:
+                    print(line, end='')  # Print the line
 
     # Data to store
     key = project_name
