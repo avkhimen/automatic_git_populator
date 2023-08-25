@@ -124,6 +124,17 @@ def main():
                 if x <= current_line_number <= y:
                     print(line, end='')  # Print the line
 
+    current_project = {'completion_status' : False, 'files' : [], 'file_numbers' : []}
+    #Commit loop
+    while not current_project['completion_status']:
+        print('Running')
+        # for every file name pick a random number of lines to copy
+        # copy lines and paste them
+        # update the dictionary's completion status and the last file lines
+
+        current_project['completion_status'] = True
+        #commit changes
+
     # Data to store
     key = project_name
     value = 'file_names'
