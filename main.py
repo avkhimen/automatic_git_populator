@@ -131,7 +131,8 @@ def main():
         # for every file name pick a random number of lines to copy
         # copy lines and paste them
         # update the dictionary's completion status and the last file lines
-
+        for file_path in non_hidden_files:
+            print('The number of lines in a file is')
         current_project['completion_status'] = True
         #commit changes
 
