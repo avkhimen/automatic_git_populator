@@ -72,6 +72,12 @@ def list_non_hidden_files(directory, absolute_path):
                 non_hidden_files_code_line_nums.append(line_count)
     return non_hidden_files, non_hidden_files_code_line_nums
 
+def setup_temp_repo():
+    pass
+
+def copy_lines_over(filename):
+    pass
+
 def main():
     parser = argparse.ArgumentParser(description="Input variables")
     parser.add_argument("--dir_name", required=True, type=str, help="Path to directory")
@@ -131,7 +137,10 @@ def main():
         # for every file name pick a random number of lines to copy
         # copy lines and paste them
         # update the dictionary's completion status and the last file lines
-        for file_path in non_hidden_files:
+        for ii, file_path in enumerate(non_hidden_files):
+            # use non_hidden_files_code_line_nums
+            # use current_project['file_numbers'][ii]
+            number_of_code_lines_remaining = non_hidden_files_code_line_nums[ii] - current_project['file_numbers'][ii]
             print('The number of lines in a file is')
             print('pick a random number for number of lines of code to commit')
         print('Commit here')
