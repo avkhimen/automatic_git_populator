@@ -72,8 +72,9 @@ def list_non_hidden_files(directory, absolute_path):
                 non_hidden_files_code_line_nums.append(line_count)
     return non_hidden_files, non_hidden_files_code_line_nums
 
-def setup_temp_repo():
-    pass
+def setup_temp_repo(git_repo_name):
+    subprocess.check_call(['cd', '/Users/vadimavkhimenia/Documents/projects/automatic_git_populator/temp'])
+    subprocess.check_call(['git', 'clone', git_repo_name])
 
 def copy_lines_over(filename):
     pass
@@ -84,6 +85,7 @@ def main():
     parser.add_argument("--freq", required=True, type=float, choices=[0.5, 1.0, 1.5, 2.0], help="How often to commit")
     parser.add_argument("--num_days", required=True, type=int, help="How many days to spend committing")
     parser.add_argument("--start_date", required=True, type=str, help="Start date in format YYYYMMDD")
+    parser.add_argument("--git_repo_name", required=True, type=str, help="Name of the git repository")
 
     args = parser.parse_args()
 
@@ -99,6 +101,10 @@ def main():
     num_days = args.num_days
 
     print(dir_name, freq, num_days)
+
+    git_repo_name = args.git_repo_name
+
+    setup_temp_repo(git_repo_name)
 
     project_name = create_project_name(absolute_path)
 
