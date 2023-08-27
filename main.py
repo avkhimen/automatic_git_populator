@@ -133,6 +133,8 @@ def main():
         # update the dictionary's completion status and the last file lines
         for file_path in non_hidden_files:
             print('The number of lines in a file is')
+            print('pick a random number for number of lines of code to commit')
+        print('Commit here')
         current_project['completion_status'] = True
         #commit changes
 
