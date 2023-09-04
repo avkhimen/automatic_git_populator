@@ -1,1 +1,8 @@
-.yml
+# data files
+*.csv
+*.npy
+*.pkl
+*.pickle
+*.xlsx
+*.xls
+*.db

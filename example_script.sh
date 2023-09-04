@@ -1,1 +1,1 @@
-python main.py --dir_name . --freq 0.5 --num_days 2 --start_date "20230801"
+python main.py --dir_name . --freq 0.5 --num_days 2 --start_date "20230801" --git_repo_name "temp_repo"
